@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dFO-bO-bkf">
-    <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
+    <device id="ipad10_2" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,23 +12,30 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="EmojiArtViewController" customModule="EmojiArt" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="818.5" height="834"/>
+                        <rect key="frame" x="0.0" y="0.0" width="759" height="810"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X4V-r4-BCc">
-                                <rect key="frame" x="0.0" y="0.0" width="818.5" height="814"/>
+                                <rect key="frame" x="0.0" y="0.0" width="759.5" height="810"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hSG-kA-lx8" customClass="EmojiArtView" customModule="EmojiArt" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="818.5" height="814"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                    </view>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ryB-uC-s1E">
+                                        <rect key="frame" x="0.0" y="0.0" width="760" height="810"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="250" constant="748" id="HAS-yH-fG0"/>
+                                            <constraint firstAttribute="width" priority="250" constant="703.5" id="PqO-iv-eDc"/>
+                                        </constraints>
+                                        <viewLayoutGuide key="contentLayoutGuide" id="p58-9P-WwU"/>
+                                        <viewLayoutGuide key="frameLayoutGuide" id="HWJ-Hh-4wj"/>
+                                    </scrollView>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="hSG-kA-lx8" secondAttribute="bottom" id="1ag-b9-Xh9"/>
-                                    <constraint firstAttribute="trailing" secondItem="hSG-kA-lx8" secondAttribute="trailing" id="VWK-Nc-KBM"/>
-                                    <constraint firstItem="hSG-kA-lx8" firstAttribute="top" secondItem="X4V-r4-BCc" secondAttribute="top" id="X4c-MV-iZv"/>
-                                    <constraint firstItem="hSG-kA-lx8" firstAttribute="leading" secondItem="X4V-r4-BCc" secondAttribute="leading" id="yOp-1r-VnR"/>
+                                    <constraint firstItem="ryB-uC-s1E" firstAttribute="centerX" secondItem="X4V-r4-BCc" secondAttribute="centerX" id="0cQ-dy-5wP"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ryB-uC-s1E" secondAttribute="bottom" id="VHX-0B-Wed"/>
+                                    <constraint firstItem="ryB-uC-s1E" firstAttribute="top" relation="greaterThanOrEqual" secondItem="X4V-r4-BCc" secondAttribute="top" id="eo3-wd-6fn"/>
+                                    <constraint firstItem="ryB-uC-s1E" firstAttribute="centerY" secondItem="X4V-r4-BCc" secondAttribute="centerY" id="oq8-fY-onw"/>
+                                    <constraint firstItem="ryB-uC-s1E" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="X4V-r4-BCc" secondAttribute="leading" id="suI-QU-6EK"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ryB-uC-s1E" secondAttribute="trailing" id="vRW-6b-zsY"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -43,12 +50,14 @@
                     </view>
                     <connections>
                         <outlet property="dropZone" destination="X4V-r4-BCc" id="8Eb-hY-eWd"/>
-                        <outlet property="emojiArtView" destination="hSG-kA-lx8" id="Nuo-LP-wuI"/>
+                        <outlet property="scrollView" destination="ryB-uC-s1E" id="GoX-ar-cHe"/>
+                        <outlet property="scrollViewHeight" destination="HAS-yH-fG0" id="mHe-J3-eIU"/>
+                        <outlet property="scrollViewWidth" destination="PqO-iv-eDc" id="nco-mc-tgb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138.69346733668343" y="126.61870503597123"/>
+            <point key="canvasLocation" x="138.33333333333334" y="125.92592592592592"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="QA5-ea-3JO">
@@ -68,19 +77,19 @@
             <objects>
                 <tableViewController id="3If-KS-DpC" customClass="EmojiArtDocumentTableViewController" customModule="EmojiArt" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0Mt-iU-fyh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="834"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="810"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DocumentCell" textLabel="Hlx-fS-gSL" style="IBUITableViewCellStyleDefault" id="dDJ-HG-fTD">
-                                <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dDJ-HG-fTD" id="mKn-U3-SyU">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hlx-fS-gSL">
-                                            <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                            <rect key="frame" x="16" y="0.0" width="288" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -114,7 +123,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7eL-r8-ebU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fk8-2f-uhz">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
