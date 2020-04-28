@@ -119,75 +119,75 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             return session.canLoadObjects(ofClass: NSAttributedString.self)
         }
         
-        func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-            let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
-            return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
-        }
-        
-        func collectionView(
-            _ collectionView: UICollectionView,
-            performDropWith coordinator: UICollectionViewDropCoordinator
-        ) {
-            let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-            for item in coordinator.items {
-                if let sourceIndexPath = item.sourceIndexPath {
-                    if let attributedString = item.dragItem.localObject as? NSAttributedString {
-                        collectionView.performBatchUpdates({
-                            emojis.remove(at: sourceIndexPath.item)
-                            emojis.insert(attributedString.string, at: destinationIndexPath.item)
-                            collectionView.deleteItems(at: [sourceIndexPath])
-                            collectionView.insertItems(at: [destinationIndexPath])
-                        })
-                        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
-                    }
-                } else {
-                    let placeholderContext = coordinator.drop(
-                        item.dragItem,
-                        to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceholderCell")
-                    )
-                    item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, error) in
-                        DispatchQueue.main.async {
-                            if let attributedString = provider as? NSAttributedString {
-                                placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                                    self.emojis.insert(attributedString.string, at: insertionIndexPath.item)
-                                })
-                            } else {
-                                placeholderContext.deletePlaceholder()
-                                }
-                            }
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
+        return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        performDropWith coordinator: UICollectionViewDropCoordinator
+    ) {
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+        for item in coordinator.items {
+            if let sourceIndexPath = item.sourceIndexPath {
+                if let attributedString = item.dragItem.localObject as? NSAttributedString {
+                    collectionView.performBatchUpdates({
+                        emojis.remove(at: sourceIndexPath.item)
+                        emojis.insert(attributedString.string, at: destinationIndexPath.item)
+                        collectionView.deleteItems(at: [sourceIndexPath])
+                        collectionView.insertItems(at: [destinationIndexPath])
+                    })
+                    coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+                }
+            } else {
+                let placeholderContext = coordinator.drop(
+                    item.dragItem,
+                    to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceholderCell")
+                )
+                item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let attributedString = provider as? NSAttributedString {
+                            placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                                self.emojis.insert(attributedString.string, at: insertionIndexPath.item)
+                            })
+                        } else {
+                            placeholderContext.deletePlaceholder()
                         }
                     }
                 }
             }
-            
-            // MARK: - UIDropInteractionDelegate
-            
-            func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-                return session.canLoadObjects(ofClass: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
+        }
+    }
+    
+    // MARK: - UIDropInteractionDelegate
+    
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .copy)
+    }
+    
+    var imageFetcher: ImageFetcher!
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        imageFetcher = ImageFetcher() { (url, image) in
+            DispatchQueue.main.async {
+                self.emojiArtBackgroundImage = image
             }
-            
-            func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-                return UIDropProposal(operation: .copy)
+        }
+        
+        session.loadObjects(ofClass: NSURL.self) { nsurls in
+            if let url = nsurls.first as? URL {
+                self.imageFetcher.fetch(url)
             }
-            
-            var imageFetcher: ImageFetcher!
-            
-            func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-                imageFetcher = ImageFetcher() { (url, image) in
-                    DispatchQueue.main.async {
-                        self.emojiArtBackgroundImage = image
-                    }
-                }
-                
-                session.loadObjects(ofClass: NSURL.self) { nsurls in
-                    if let url = nsurls.first as? URL {
-                        self.imageFetcher.fetch(url)
-                    }
-                }
-                session.loadObjects(ofClass: UIImage.self) { images in
-                    if let image = images.first as? UIImage {
-                        self.imageFetcher.backup = image
-                    }
-                }
+        }
+        session.loadObjects(ofClass: UIImage.self) { images in
+            if let image = images.first as? UIImage {
+                self.imageFetcher.backup = image
             }
+        }
+    }
 }
